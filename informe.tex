@@ -100,15 +100,18 @@
 			  \TLista{y | y \leftarrow a, y==x}
 			}
 		}
-\end{itemize}
 
-
-\begin{itemize}
 	\item \auxil{todosIguales(ts : \TLista{T}) : Bool}{(\longitud{ls} == 0) \vee cuenta(ts[0], ts) == \longitud{ts}}
-\end{itemize}
 
-
-\begin{itemize}
+	\item \auxil{alto(im:Imagen) : \ent}{\longitud{im}}
+	\item \auxil{ancho(im: Imagen) : \ent}{$if$(alto(im) == 0)$ then $0$ else $\longitud{im[0]}}
+	%\item \auxil{listaAnchos(im : Imagen) : \TLista{\ent}}{\longitud{im[i]$ $|$ $i \leftarrow [0..\longitud{im}-1]}}
+	\item \auxil{pixelValido(p : Pixel) : Bool}{(prm(p) \geq 0)$ $\land$ $(prm(p) < 256)$ $\land$ $(sgd(p) \geq 0)$ $\land$ $(sgd(p) < 256)$ $\land$ $(ter(p) \geq 0)$ $\land$ $(ter(p) < 256)}
+	
+	
+	
+	
+	
 	\item \auxil{imagenValida(im:Imagen) : Bool}{ancho(im) > 0$ $\land$ $alto(im) > 0$ $\land$ $todosIguales(listaAnchos(im))$ $\land$ $todos([pixelValido(p)$ $|$ $p \leftarrow concat(im)])}
 \end{itemize}
         
