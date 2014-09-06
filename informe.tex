@@ -35,7 +35,7 @@
 \integrante{Demartino, Francisco}{348/14}{demartino.francisco@gmail.com}
 \integrante{Frachtenberg Goldsmit, Kevin}{247/14}{kevinfra94@gmail.com}
 \integrante{Gomez, Horacio}{756/13}{horaciogomez.1993@gmail.com}
-\integrante{Pondal, Iván}{78/14}{ivan.pondal@gmail.com}
+\integrante{Pondal, Iván}{078/14}{ivan.pondal@gmail.com}
 
 \maketitle
 
@@ -67,10 +67,10 @@
 	Especificación Blur:
 
 	\begin{problema}{Blur}{imagenOriginal:Imagen, k:\ent}{imagenNueva:Imagen}
-		\requiere{k > 0 \land imagenValida(imagenOriginal)}
+		\requiere{k > 0 \land imagenV\acute{a}lida(imagenOriginal)}
 		\asegura{mismoTama\tilde{n}o(imagenOriginal, imagenNueva)}
-		\asegura{imagenValida(imagenNueva)}
-		\asegura{todos([imagenNueva[y][x] == colorPromedioEnPosicion(imagenOriginal,x,y,k)$ $|$ $x \leftarrow [0..ancho(im)-1],$ $y \leftarrow [0..alto(im)-1]])}
+		\asegura{imagenV\acute{a}lida(imagenNueva)}
+		\asegura{todos([imagenNueva[y][x] == colorPromedioEnPosicion(imagenOriginal,x,y,k) \linebreak | \  x \leftarrow [0..ancho(im)),y \leftarrow [0..alto(im))])}
 	\end{problema}
 
 \end{ejercicio}
@@ -80,10 +80,10 @@
 	Especificación Acuarela:
 	
 	\begin{problema}{Acuarela}{imgOriginal:Imagen, k:\ent}{imgFinal:Imagen}
-		\requiere{k > 0 \land imagenValida(imgOriginal)}
-		\asegura{imagenValida(imgFinal)}
-		\asegura{mismoTama\tilde{n}o(imgOriginal,$ $imgFinal)}
-		\asegura{filtroAcuarela(imgOriginal,$ $imgFinal,$ $k)}
+		\requiere{k > 0 \land imagenV\acute{a}lida(imgOriginal)}
+		\asegura{imagenV\acute{a}lida(imgFinal)}
+		\asegura{mismoTama\tilde{n}o(imgOriginal, \ imgFinal)}
+		\asegura{filtroAcuarela(imgOriginal, \ imgFinal, \ k)}
 	\end{problema}
 
 \end{ejercicio}
@@ -97,22 +97,22 @@
 			cuenta(x:T, a:\TLista{T}) : \ent
 		     }{ 
 			\longitud {
-			  \TLista{y | y \leftarrow a, y==x}
+			  \TLista{1 | y \leftarrow a, y==x}
 			}
 		}
 
 	\item \auxil{todosIguales(ts : \TLista{T}) : Bool}{(\longitud{ls} == 0) \vee cuenta(ts[0], ts) == \longitud{ts}}
 
 	\item \auxil{alto(im:Imagen) : \ent}{\longitud{im}}
-	\item \auxil{ancho(im: Imagen) : \ent}{$if$(alto(im) == 0)$ then $0$ else $\longitud{im[0]}}
-	%\item \auxil{listaAnchos(im : Imagen) : \TLista{\ent}}{\longitud{im[i]$ $|$ $i \leftarrow [0..\longitud{im}-1]}}
-	\item \auxil{pixelValido(p : Pixel) : Bool}{(prm(p) \geq 0)$ $\land$ $(prm(p) < 256)$ $\land$ $(sgd(p) \geq 0)$ $\land$ $(sgd(p) < 256)$ $\land$ $(ter(p) \geq 0)$ $\land$ $(ter(p) < 256)}
-	
-	
-	
-	
-	
-	\item \auxil{imagenValida(im:Imagen) : Bool}{ancho(im) > 0$ $\land$ $alto(im) > 0$ $\land$ $todosIguales(listaAnchos(im))$ $\land$ $todos([pixelValido(p)$ $|$ $p \leftarrow concat(im)])}
+	\item \auxil{ancho(im: Imagen) : \ent}{ ifThenElse (alto(im) == 0,0,\longitud{im[0]})}
+	%\item \auxil{listaAnchos(im : Imagen) : \TLista{\ent}}{\longitud{im[i] \ | \ i \leftarrow [0..\longitud{im}-1]}}
+	\item \auxil{pixelV\acute{a}lido(p : Pixel) : Bool}{(prm(p) \geq 0) \ \land \ (prm(p) < 256) \ \land \ (sgd(p) \geq 0) \ \land \ (sgd(p) < 256) \ \land \ (ter(p) \geq 0) \ \land \ (ter(p) < 256)}
+
+	\item \auxil{imagenV\acute{a}lida(im:Imagen) : Bool}{ancho(im) > 0 \ \land \ alto(im) > 0 \ \land \ todosIguales(listaAnchos(im)) \ \land \ todos([imagenV\acute{a}lida(p) \ | \ p \leftarrow concat(im)])}
+		
+	\item \auxil{mismoTama\tilde{n}o(a,b:Imagen) : Bool}{ 
+		 imagenV\acute{a}lida(a)\ \land \ imagenV\acute{a}lida(b)\ \land \ (ancho(a)==ancho(b)) \ \land \ alto(a)==alto(b))}
+
 \end{itemize}
         
 \end{document}
