@@ -94,8 +94,7 @@
 		\requiere {ancho(im)\ mod \ n==0}
 		\requiere {alto(im) \ mod\ m==0}
 		\asegura {mismos (listaPartes, imCortadas (im, m, n))}
-		\asegura {todos([alto(parte) == alto(im) \ div \ m \land 
-		 ancho(parte) ==ancho(im) \ div \ n | parte \leftarrow listaPartes])}
+		\asegura {todos([alto(parte)$ $==$ $alto(im)$ $div$ $m$ $\land$ $ancho(parte)==ancho(im)$ $div$ $n$ $|$ $parte \leftarrow listaPartes])}
 	\end{problema}
 
 \end{ejercicio}
@@ -106,9 +105,10 @@
 	\begin{problema*}{Pegar}{destino : Imagen, col : Pixel, origen: Imagen}
 		\modifica {destino}
 		\requiere {imagenValida(origen) \land imagenValida(pre(destino))}
-		\asegura { \lnot imagenTieneHuecoPegar(pre(destino), origen, col) \rightarrow destino == pre(destino)}
-    	\asegura {imagenTieneHuecoPegar(pre(destino), origen, col) \rightarrow aplicaPegar(pre(destino), destino, huecoPegar(origen, col), origen)}
+		\asegura { \lnot imagenTieneHuecoPegar(pre(destino), origen, col) \Then destino == pre(destino)}
+    	\asegura {imagenTieneHuecoPegar(pre(destino), origen, col) \Then aplicaPegar(pre(destino), destino, huecoPegar(origen, col), origen)}
 	\end{problema*}
+	%acá se puede escribir mejor con un ifThenElse
 
 \end{ejercicio}
 
@@ -136,7 +136,7 @@
 			cuenta(x:T, a:\TLista{T}) : \ent
 		     }{ 
 			\longitud {
-			  \TLista{1 | y \leftarrow a, y==x}
+			  \TLista{y \ | \ y \leftarrow a, y==x}
 			}
 		}
 
@@ -148,7 +148,7 @@
 		[tss[i][j] | i \leftarrow [0..|tss|), j \leftarrow  [0..|tss[i]|)]
 	}
 
-	\item \auxil{todosIguales(ts : \TLista{T}) : Bool}{(\longitud{ls} == 0) \vee cuenta(ts[0], ts) == \longitud{ts}}
+	\item \auxil{todosIguales(ts : \TLista{T}) : Bool}{(\longitud{ts} == 0) \vee cuenta(ts[0], ts) == \longitud{ts}}
 
 	\item \auxil{alto(im:Imagen) : \ent}{\longitud{im}}
 	
@@ -162,17 +162,27 @@
 	\item \auxil{pixelV\acute{a}lido(p : Pixel) : Bool}{
 	\\ (prm(p) \geq 0) \ \land \ (prm(p) < 256) \ \land \ (sgd(p) \geq 0) \ \land \ (sgd(p) < 256) \ \land \ (ter(p) \geq 0) \ \land \ (ter(p) < 256)}
 
-	\item \auxil{imagenV\acute{a}lida(im:Imagen) : Bool}{ ancho(im) > 0 \ \land \ alto(im) > 0 \ \land \\ todosIguales(listaAnchos(im)) \ \land \ todos([imagenV\acute{a}lida(p) \ | \ p \leftarrow concat(im)])}
+	\item \auxil{imagenV\acute{a}lida(im:Imagen) : Bool}{ ancho(im) > 0 \ \land \ alto(im) > 0 \ \land \\ todosIguales(listaAnchos(im)) \ \land \ todos([pixelV\acute{a}lido(p) \ | \ p \leftarrow concat(im)])}
 		
 	\item \auxil{mismoTama\tilde{n}o(a,b:Imagen) : Bool}{ 
 	ancho(a)==ancho(b) \ \land \ alto(a)==alto(b)}
 	
 	\item \auxil{kVecinosCompletos(k, x, y: \ent, im : Imagen) : Bool}{ 
-	 (x >= k) \land
-    (y >= k) \land \\
+	 (x \geq k) \land
+    (y \geq k) \land \\
     (x < ancho(im) - k) \land
     (y < alto(im) - k)
 	}
+	%esta debería ser menor o igual que el ancho-k
+	
+	\item \auxil{subImagen(x0, x1, y0, y1 : \ent, im : Imagen) : Imagen}{
+	$ \\ $ [ 
+[ im[i][j]$ $
+|$ $j \leftarrow [x0...x1]
+]$ $ 
+|$ $i \leftarrow [y0...y1]
+]
+}
 	
 	\item \auxil{kVecinos(k, x, y: \ent, im: Imagen) : [Pixel]}{ 
 	\\
@@ -180,7 +190,7 @@
 	}
 	
 	\item \auxil{promedio(ns: [\ent]) : \ent}{ 
-	\suma {ns} \ div \ |ns|
+	sum(ns) \ div \ |ns|
 	}
 	
 	\item \auxil{pixelPromedio(ps : [Pixel]) : Pixel}{ \\
@@ -190,12 +200,26 @@
 	\item \auxil{colorPromedioEnPosici\acute{o}n(im : Imagen, x, y, k: \ent) : Pixel}{ 
 	\\ ifThenElse(kVecinosCompletos(k, x, y, im), pixelPromedio(kVecinos(k, x,y,im)), pixelNegro)
 	}
-	
-	\item \auxil{filtroAcuarela(imgOriginal, imgFinal: Imagen, k: \ent) : Bool}{ 
-	\\ todos([pixelCumpleFiltroAcuarela(imgOriginal, ImgFinal, k, x, y)  
-	\\ | \ y \leftarrow [0..alto(imgOriginal) ), x \leftarrow 0..ancho(imgOriginal) )])
-	}
-	
+		
+\item \auxil{menores(xs: [\ent], x: \ent) : \ent}{
+	|[y$ $|$ $y \leftarrow xs, y < x]|
+}
+
+\item \auxil{menoresIguales(xs: [\ent], x: \ent) : \ent}{
+	|[y$ $|$ $y \leftarrow xs, y \leq x]|
+}
+		
+\item \auxil{esMediana(xs:[\ent], x:\ent) : Bool}{ 
+	\\ menores(xs,x) < (|xs| \ div \ 2) \land menoresIguales(xs,x) \geq (|xs| \ div \ 2)
+}
+			%esMediana tenia | | en las funciones menores y era al pedo porque ambas son Int
+			
+\item \auxil{pixelEsMedianaLista(px: Pixel, listaPixeles: [Pixel]) : Bool}{ 
+\\ esMediana(canalesRojos(listaPixeles),prm(px)) \ \land \
+esMediana(canalesVerdes(listaPixeles),sgd(px)) \ \land \
+esMediana(canalesAzules(listaPixeles),ter(px))
+}
+
 	\item \auxil{pixelCumpleFiltroAcuarela(imgOriginal, imgFinal: Imagen, k, x, y : \ent) : Bool}{ 
 	\\ ifThenElse(
 kVecinosCompletos(k, x, y, imgOriginal), 
@@ -204,51 +228,24 @@ kVecinosCompletos(k, x, y, imgOriginal),
 )
 	}
 
-\item \auxil{pixelEsMedianaLista(px: Pixel, listaPixeles: [Pixel]) : Bool}{ 
-\\ esMediana(canalesRojos(listaPixeles),prm(px)) \ \land \
-esMediana(canalesVerdes(listaPixeles),sgd(px)) \ \land \
-esMediana(canalesAzules(listaPixeles),ter(px))
-}
-
-\item \auxil{esMediana(xs:[\ent], x:\ent) : Bool}{ 
-	\\ |menores(xs,x)| < (|xs| \ div \ 2) \land |menoresIguales(xs,x)| \geq (|xs| \ div \ 2)
-}
-
-\item \auxil{menores(xs: [\ent], x: \ent) : \ent}{
-	|[1 | y \leftarrow xs, y < x]|
-}
-
-\item \auxil{menoresIguales(xs: [\ent], x: \ent) : \ent}{
-	|[1 | y \leftarrow xs, y \leq x]|
-}
-
-
-\item \auxil{subImagen(x0, x1, y0, y1 : \ent, im : Imagen) : Imagen}{
-	$ \\ $ [ 
-[ im[i][j] 
-| j \leftarrow [x0...x1] 
-] 
-| i \leftarrow [y0...y1]
-]
-}
+	\item \auxil{filtroAcuarela(imgOriginal, imgFinal: Imagen, k: \ent) : Bool}{ 
+	\\ todos([pixelCumpleFiltroAcuarela(imgOriginal, ImgFinal, k, x, y)  
+	\\ | \ y \leftarrow [0..alto(imgOriginal) ), x \leftarrow [0..ancho(imgOriginal) )])
+	}
 
 \item \auxil{imCortadas(im: Imagen, m, n : \ent) : [Imagen]}{
-	$ \\ $ [subImagen((i*ancho(im) \ div \ n), ((i+1)*ancho(im) \ div \ n) - 1, (j*alto(im) \ div \ m), \\ ((j+1)*alto(im) \ div \ m) - 1, im) | i \leftarrow [0..m) , j \leftarrow [0..n)
+	$ \\ $ [subImagen((i*ancho(im) \ div \ n), ((i+1)*ancho(im) \ div \ n) - 1, (j*alto(im) \ div \ m), \\ ((j+1)*alto(im) \ div \ m) - 1, im) | i \leftarrow [0..m) , j \leftarrow [0..n)]
 }
 
 \item \auxil{contieneSubImagen(grande, chica : Imagen) : Bool}{
 	\\ alguno([
-chica == subImagen(x0, \ x0 \ + \ ancho(chica) \ - \ 1, \ y0, \ y0 \ + \ ancho(chica) \- \ 1, \ grande) 
-	\\ | x0 \leftarrow [0...ancho(grande) - ancho(chica)], 
+chica == subImagen(x0, \ x0 \ + \ ancho(chica) \ - \ 1, \ y0, \ y0 \ + \ ancho(chica) \ - \ 1, \ grande) 
+	\\ |$ $x0 \leftarrow [0...ancho(grande) - ancho(chica)], 
   y0 \leftarrow [0...alto(grande) - alto(chica)]	
 ])
 }
 
-\item \auxil{imagenTieneHuecoPegar(destino, origen: Imagen, col) : Bool}{
-	\\ contieneSubImagen(destino, huecoPegar(origen, col))
-}
-
-\item \auxil{huecoGrande(col : Pixel, alto, ancho : \ent) : Imagen}{
+\item \auxil{huecoGrande(col : Pixel,$ $alto, ancho : \ent) : Imagen}{
 	[col | j \leftarrow [0..ancho)] | i \leftarrow [0..alto)]
 }
 
@@ -256,12 +253,12 @@ chica == subImagen(x0, \ x0 \ + \ ancho(chica) \ - \ 1, \ y0, \ y0 \ + \ ancho(c
 	huecoGrande(col, alto(im), ancho(im))
 }
 
-\item \auxil{aplicaPegar(grande1, grande2, chica1, chica2 : Imagen) : Bool}{
-	\\ mismoTama\tilde{n}o(grande1, grande2) \ \land \ mismoTama\tilde{n}o(chica1, chica2)\ \land \
-		\\ alguno([
-		chica1 == subImagen(x0,  x0  +  ancho(chica1)  - 1, y0 , y0  + alto(chica1) -  1,  grande1) \ \land \ chica2 == subImagen(x0, x0 + ancho(chica2) - 1, y0, y0 + alto(chica2) - 1, grande2) \ \land \ \\ sonIgualesSalvoRectangulo(grande1, grande2, x0, x0+ancho(chica1) - 1, y0, y1+alto(chica1) - 1)
-\\ | x0 \leftarrow [0...ancho(grande1) - ancho(chica1)], y0 \leftarrow [0...alto(grande1) - alto(chica1)]	
-])
+\item \auxil{imagenTieneHuecoPegar(destino, origen: Imagen, col: Pixel) : Bool}{
+	\\ contieneSubImagen(destino, huecoPegar(origen, col))
+}
+
+\item \auxil{enRango(a, inicio, fin : \ent) : Bool}{
+	inicio \leq a \land a \leq fin
 }
 
 \item \auxil{sonIgualesSalvoRectangulo(im1, im2 : Imagen, x0, x1, y0, y1 : \ent) : Bool}{
@@ -269,8 +266,11 @@ chica == subImagen(x0, \ x0 \ + \ ancho(chica) \ - \ 1, \ y0, \ y0 \ + \ ancho(c
 	\\ | x \leftarrow [x0..x1], y \leftarrow [y0..y1]])
 }
 
-\item \auxil{enRango(a, inicio, fin : \ent) : Bool}{
-	inicio \leq a \land a \leq fin
+\item \auxil{aplicaPegar(grande1, grande2, chica1, chica2 : Imagen) : Bool}{
+	\\ mismoTama\tilde{n}o(grande1, grande2) \ \land \ mismoTama\tilde{n}o(chica1, chica2)\ \land \
+		\\ alguno([
+		chica1 == subImagen(x0,  x0  +  ancho(chica1)  - 1, y0 , y0  + alto(chica1) -  1,  grande1) \ \land \ chica2 == subImagen(x0, x0 + ancho(chica2) - 1, y0, y0 + alto(chica2) - 1, grande2) \ \land \ \\ sonIgualesSalvoRectangulo(grande1, grande2, x0, x0+ancho(chica1) - 1, y0, y1+alto(chica1) - 1)\ |$ $x0 \leftarrow [0...ancho(grande1) - ancho(chica1)], y0 \leftarrow [0...alto(grande1) - alto(chica1)]	
+])
 }
 
 \end{itemize}
