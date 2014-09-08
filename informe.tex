@@ -105,8 +105,8 @@
 	\begin{problema*}{Pegar}{destino : Imagen, col : Pixel, origen: Imagen}
 		\modifica {destino}
 		\requiere {imagenValida(origen) \land imagenValida(pre(destino))}
-		\asegura { \lnot imagenTieneHuecoPegar(pre(destino), origen, col) \Then destino == pre(destino)}
-    	\asegura {imagenTieneHuecoPegar(pre(destino), origen, col) \Then aplicaPegar(pre(destino), destino, huecoPegar(origen, col), origen)}
+		\asegura {  \lnot imagenTieneHuecoPegar(pre(destino), origen, col) \Then $ \newline $ destino  == pre(destino)}
+  	  	\asegura {imagenTieneHuecoPegar(pre(destino), origen, col) \Then $ \newline $ aplicaPegar(pre(destino), destino, huecoPegar(origen, col), origen)}
 	\end{problema*}
 	%acá se puede escribir mejor con un ifThenElse
 
@@ -239,14 +239,14 @@ kVecinosCompletos(k, x, y, imgOriginal),
 
 \item \auxil{contieneSubImagen(grande, chica : Imagen) : Bool}{
 	\\ alguno([
-chica == subImagen(x0, \ x0 \ + \ ancho(chica) \ - \ 1, \ y0, \ y0 \ + \ ancho(chica) \ - \ 1, \ grande) 
+chica == subImagen(x0, \ x0 \ + \ ancho(chica) \ - \ 1, \ y0, \ y0 \ + \ ancho(chica)  -  1, \ grande) 
 	\\ |$ $x0 \leftarrow [0...ancho(grande) - ancho(chica)], 
   y0 \leftarrow [0...alto(grande) - alto(chica)]	
 ])
 }
 
 \item \auxil{huecoGrande(col : Pixel,$ $alto, ancho : \ent) : Imagen}{
-	[col | j \leftarrow [0..ancho)] | i \leftarrow [0..alto)]
+	[  [col \ | j \leftarrow [0..ancho)] ] \ | i \leftarrow [0..alto)] ]
 }
 
 \item \auxil{huecoPegar(im : Imagen, col : Pixel) : Imagen}{
