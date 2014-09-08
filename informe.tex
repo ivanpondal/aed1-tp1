@@ -15,7 +15,7 @@
 \usepackage{caratula}
 % incluye macros espec materia
 \include{algo1-cmds}
-
+		
 % Encabezado
 \lhead{Algoritmos y Estructuras de Datos I}
 \rhead{Grupo 07}
@@ -90,11 +90,13 @@
 	
 	\begin{problema}{Dividir}{im : Imagen, m, n : \ent}{listaPartes:[Imagen]}
 		\requiere {m>0 \land n>0}
-		\requiere {imagenValida(im) \land imagenValida(im)}
+		\requiere {imagenValida(im)}
 		\requiere {ancho(im)\ mod \ n==0}
 		\requiere {alto(im) \ mod\ m==0}
 		\asegura {mismos (listaPartes, imCortadas (im, m, n))}
-		\asegura {todos([alto(parte)$ $==$ $alto(im)$ $div$ $m$ $\land$ $ancho(parte)==ancho(im)$ $div$ $n$ $|$ $parte \leftarrow listaPartes])}
+		\asegura {todos([
+		(alto(parte)$ $==$ $(alto(im)$ $div$ $m))$ $\land$ $
+		(ancho(parte)==(ancho(im)$ $div$ $n$ $))|$ $parte \leftarrow listaPartes])}
 	\end{problema}
 
 \end{ejercicio}
@@ -190,7 +192,7 @@
 	}
 	
 	\item \auxil{promedio(ns: [\ent]) : \ent}{ 
-	sum(ns) \ div \ |ns|
+	ifThenElse(|ns| == 0, 0, sum(ns) \ div \ |ns|)
 	}
 	
 	\item \auxil{pixelPromedio(ps : [Pixel]) : Pixel}{ \\
@@ -267,11 +269,19 @@ chica == subImagen(x0, \ x0 \ + \ ancho(chica) \ - \ 1, \ y0, \ y0 \ + \ ancho(c
 }
 
 \item \auxil{aplicaPegar(grande1, grande2, chica1, chica2 : Imagen) : Bool}{
-	\\ mismoTama\tilde{n}o(grande1, grande2) \ \land \ mismoTama\tilde{n}o(chica1, chica2)\ \land \
-		\\ alguno([
-		chica1 == subImagen(x0,  x0  +  ancho(chica1)  - 1, y0 , y0  + alto(chica1) -  1,  grande1) \ \land \ chica2 == subImagen(x0, x0 + ancho(chica2) - 1, y0, y0 + alto(chica2) - 1, grande2) \ \land \ \\ sonIgualesSalvoRectangulo(grande1, grande2, x0, x0+ancho(chica1) - 1, y0, y1+alto(chica1) - 1)\ |$ $x0 \leftarrow [0...ancho(grande1) - ancho(chica1)], y0 \leftarrow [0...alto(grande1) - alto(chica1)]	
-])
+	\\ mismoTama\tilde{n}o(grande1, grande2) \ \land \\ mismoTama\tilde{n}o(chica1, chica2)\ \land \\
+		alguno([ aplicaPegarEnPos(grande1, grande2, chica1, chica2, 
+		\\ x0, x0+ancho(chica1)-1, y0, y0+alto(chica1)-1)
+		\\ |$ $x0 \leftarrow [0...ancho(grande1) - ancho(chica1)], y0 \leftarrow [0...alto(grande1) - alto(chica1)]	
+		\\ ])
 }
+
+\item \auxil{aplicaPegarEnPos(g1, g2, c1, c2 : Imagen, x0, x1, y0, y1 : \ent) : Bool}{
+\\
+		c1 == subImagen(x0,  x1, y0 , y1, g1) \land \\
+		c2 == subImagen(x0, x1, y0, y1, g2) \land \\ sonIgualesSalvoRectangulo(g1, g2, x0, x1, y0, y1)
+}
+
 
 \end{itemize}
         
