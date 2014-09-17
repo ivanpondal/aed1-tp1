@@ -192,7 +192,7 @@
 	}
 	
 	\item \auxil{promedio(ns: [\ent]) : \ent}{ 
-	ifThenElse(|ns| == 0, 0, sum(ns) \ div \ |ns|)
+	if$ $ (|ns| == 0)$ $ then $ $ 0 $ $ else $ $ (sum(ns) \ div \ |ns|)
 	}
 	
 	\item \auxil{pixelPromedio(ps : [Pixel]) : Pixel}{ \\
@@ -200,7 +200,8 @@
 	}
 
 	\item \auxil{colorPromedioEnPosici\acute{o}n(im : Imagen, x, y, k: \ent) : Pixel}{ 
-	\\ ifThenElse(kVecinosCompletos(k, x, y, im), pixelPromedio(kVecinos(k, x,y,im)), pixelNegro)
+	\\ 
+	if $ $ kVecinosCompletos(k, x, y, im)$ $ then $ $ pixelPromedio(kVecinos(k, x,y,im)) $ $ else $ $ pixelNegro
 	}
 		
 \item \auxil{menores(xs: [\ent], x: \ent) : \ent}{
@@ -223,11 +224,8 @@ esMediana(canalesAzules(listaPixeles),ter(px))
 }
 
 	\item \auxil{pixelCumpleFiltroAcuarela(imgOriginal, imgFinal: Imagen, k, x, y : \ent) : Bool}{ 
-	\\ ifThenElse(
-kVecinosCompletos(k, x, y, imgOriginal), 
-\\ pixelEsMedianaLista(imgFinal[y][x], kVecinos(k, x, y, imgOriginal) ), 
-\\ imgFinal[y][x]==pixelNegro
-)
+	\\
+	if $ $ kVecinosCompletos(k, x, y, imgOriginal)$ $ then \\ pixelEsMedianaLista(imgFinal[y][x], kVecinos(k, x, y, imgOriginal) ) $ $ else \\ imgFinal[y][x]==pixelNegro
 	}
 
 	\item \auxil{filtroAcuarela(imgOriginal, imgFinal: Imagen, k: \ent) : Bool}{ 
