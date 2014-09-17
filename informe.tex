@@ -90,7 +90,7 @@
 	
 	\begin{problema}{Dividir}{im : Imagen, m, n : \ent}{listaPartes:[Imagen]}
 		\requiere {m>0 \land n>0}
-		\requiere {imagenValida(im)}
+		\requiere {imagenV\acute{a}lida(im)}
 		\requiere {ancho(im)\ mod \ n==0}
 		\requiere {alto(im) \ mod\ m==0}
 		\asegura {mismos (listaPartes, imCortadas (im, m, n))}
@@ -106,7 +106,7 @@
 	
 	\begin{problema*}{Pegar}{destino : Imagen, col : Pixel, origen: Imagen}
 		\modifica {destino}
-		\requiere {imagenValida(origen) \land imagenValida(pre(destino))}
+		\requiere {imagen\acute{a}lida(origen) \land imagen\acute{a}lida(pre(destino))}
 		\asegura {  \lnot imagenTieneHuecoPegar(pre(destino), origen, col) \Then $ \newline $ destino  == pre(destino)}
   	  	\asegura {imagenTieneHuecoPegar(pre(destino), origen, col) \Then $ \newline $ aplicaPegar(pre(destino), destino, huecoPegar(origen, col), origen)}
 	\end{problema*}
