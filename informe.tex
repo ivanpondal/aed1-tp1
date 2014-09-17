@@ -105,6 +105,7 @@
 	Especificación Pegar:
 	
 	\begin{problema*}{Pegar}{destino : Imagen, col : Pixel, origen: Imagen}
+        \requiere {pixelV\acute{a}lido(col)}
 		\modifica {destino}
 		\requiere {imagen\acute{a}lida(origen) \land imagen\acute{a}lida(pre(destino))}
 		\asegura {  \lnot imagenTieneHuecoPegar(pre(destino), origen, col) \Then $ \newline $ destino  == pre(destino)}
