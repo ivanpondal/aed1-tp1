@@ -147,7 +147,7 @@
 	}
 
 	\item \auxil{concat(ts : \TLista{\TLista{T}}) : \TLista{T}}{
-		[tss[i][j] | i \leftarrow [0..|tss|), j \leftarrow  [0..|tss[i]|)]
+		[ts[i][j] | i \leftarrow [0..|ts|), j \leftarrow  [0..|ts[i]|)]
 	}
 
 	\item \auxil{todosIguales(ts : \TLista{T}) : Bool}{(\longitud{ts} == 0) \vee cuenta(ts[0], ts) == \longitud{ts}}
