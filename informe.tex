@@ -1,0 +1,321 @@
+% Clase y configuracion de tipo de documento
+\documentclass[10pt,a4paper,spanish]{article}
+% Inclusion de paquetes
+\usepackage{a4wide}
+\usepackage{amsmath, amscd, amssymb, amsthm, latexsym}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[width=15.5cm, left=3cm, top=2.5cm, height= 24.5cm]{geometry}
+\usepackage{fancyhdr}
+\pagestyle{fancyplain}
+\usepackage{listings}
+\usepackage{enumerate}
+\usepackage{xspace}
+\usepackage{longtable}
+\usepackage{caratula}
+% incluye macros espec materia
+\include{algo1-cmds}
+		
+% Encabezado
+\lhead{Algoritmos y Estructuras de Datos I}
+\rhead{Grupo 7}
+% Pie de pagina
+\renewcommand{\footrulewidth}{0.4pt}
+\lfoot{Facultad de Ciencias Exactas y Naturales}
+\rfoot{Universidad de Buenos Aires}
+
+\begin{document}
+
+% Datos de caratula
+\materia{Algoritmos y Estructuras de Datos I}
+\titulo{Trabajo Pr\'actico 1}
+\subtitulo{Una especificaci\'on vale m\'as que mil im\'agenes}
+\grupo{Grupo: 7}
+
+\integrante{Demartino, Francisco}{348/14}{demartino.francisco@gmail.com}
+\integrante{Frachtenberg Goldsmit, Kevin}{247/14}{kevinfra94@gmail.com}
+\integrante{Gomez, Horacio}{756/13}{horaciogomez.1993@gmail.com}
+\integrante{Pondal, Iván}{078/14}{ivan.pondal@gmail.com}
+
+\maketitle
+
+\newpage
+
+% Para crear un indice
+%\tableofcontents
+
+% Forzar salto de pagina
+\clearpage
+
+% Pueden modularizar el documento incluyendo otros .tex
+% \include{observaciones}
+
+\section{Observaciones}
+
+	\begin{enumerate}
+		\item A lo largo de la confección de este trabajo práctico, nos surgió la duda acerca de si considerar una imagen vacía de 0x0 como válida. Ante las respuestas obtenidas de los docentes, quienes nos indicaron que podíamos o no considerarla como válida, decidimos dejarla como imágen no valida a raíz de que, por ejemplo, en el caso del filtro ``Dividir'', podrían generarse infinitas imágenes vacías.
+	\end{enumerate}
+
+% Otro salto de pagina
+% \newpage
+
+\section{Resolución}
+
+\begin{ejercicio}
+	Especificación Blur:
+
+	\begin{problema}{Blur}{imagenOriginal:Imagen, k:\ent}{imagenNueva:Imagen}
+		\requiere{k > 0 \land imagenV\acute{a}lida(imagenOriginal)}
+		\asegura{imagenV\acute{a}lida(imagenNueva)}
+		\asegura{mismoTama\tilde{n}o(imagenOriginal, imagenNueva)}
+		\asegura{todos([imagenNueva[y][x] == colorPromedioEnPosici\acute{o}n(imagenOriginal,x,y,k) \linebreak | \  x \leftarrow [0..ancho(im)),y \leftarrow [0..alto(im))])}
+	\end{problema}
+
+\end{ejercicio}
+
+\begin{ejercicio}
+	Especificación Acuarela:
+	
+	\begin{problema}{Acuarela}{imgOriginal:Imagen, k:\ent}{imgFinal:Imagen}
+		\requiere{k > 0 \land imagenV\acute{a}lida(imgOriginal)}
+		\asegura{imagenV\acute{a}lida(imgFinal)}
+		\asegura{mismoTama\tilde{n}o(imgOriginal, \ imgFinal)}
+		\asegura{filtroAcuarela(imgOriginal, \ imgFinal, \ k)}
+	\end{problema}
+
+\end{ejercicio}
+
+\begin{ejercicio}
+	Especificación Dividir:
+	
+	\begin{problema}{Dividir}{im : Imagen, m, n : \ent}{listaPartes:[Imagen]}
+		\requiere {m>0 \land n>0}
+		\requiere {imagenV\acute{a}lida(im)}
+		\requiere {ancho(im)\ mod \ n==0}
+		\requiere {alto(im) \ mod\ m==0}
+		\asegura {mismos (listaPartes, imCortadas (im, m, n))}
+	\end{problema}
+
+\end{ejercicio}
+
+\begin{ejercicio}
+	Especificación Pegar:
+	
+	\begin{problema*}{Pegar}{destino : Imagen, col : Pixel, origen: Imagen}
+        \modifica {destino}
+        \requiere {pixelV\acute{a}lido(col)}
+		\requiere {imagenV\acute{a}lida(origen) \land imagenV\acute{a}lida(pre(destino))}
+		\requiere {m\acute{a}scaraV\acute{a}lida(pre(destino), col)}
+		\asegura {  \lnot imagenTieneHuecoPegar(pre(destino), origen, col) \Then $ \newline $ destino  == pre(destino)}
+  	  	\asegura {imagenTieneHuecoPegar(pre(destino), origen, col) \Then $ \newline $ aplicaPegar(pre(destino), destino, huecoPegar(origen, col), origen)}
+	\end{problema*}
+
+\end{ejercicio}
+
+\newpage
+
+\subsection{Auxiliares}
+
+\begin{itemize}
+
+	\item \auxil{pixelNegro : Pixel}{ 
+		(0, 0, 0)
+	}
+	
+	\item \auxil{canalesRojos(ps : [Pixel]) : [\ent]}{ 
+		[prm(p) \ | \ p \leftarrow ps]
+	}
+	
+	\item \auxil{canalesVerdes(ps : [Pixel]) : [\ent]}{ 
+		[sgd(p) \ | \ p \leftarrow ps]
+	}
+	
+	\item \auxil{canalesAzules(ps : [Pixel]) : [\ent]}{ 
+		[ter(p) \ | \ p \leftarrow ps]
+	}
+
+	\item \auxil{
+			cuenta(x:T, a:\TLista{T}) : \ent
+		     }{ 
+			\longitud {
+			  \TLista{y \ | \ y \leftarrow a, y==x}
+			}
+		}
+
+	\item \auxil{mismos(a, b: \TLista{T}) : Bool}{ 
+		|a| == |b| \land (\forall c \leftarrow a) cuenta(c,a) == cuenta(c,b)
+	}
+
+	\item \auxil{concat(ts : \TLista{\TLista{T}}) : \TLista{T}}{
+		[ts[i][j] | i \leftarrow [0..|ts|), j \leftarrow  [0..|ts[i]|)]
+	}
+
+	\item \auxil{todosIguales(ts : \TLista{T}) : Bool}{(\longitud{ts} == 0) \vee cuenta(ts[0], ts) == \longitud{ts}}
+
+	\item \auxil{alto(im:Imagen) : \ent}{\longitud{im}}
+	
+	\item \auxil{ancho(im: Imagen) : \ent}{ if$ $(alto(im) == 0)$ $Then$ $0$ $Else$ $\longitud{im[0]})}
+	
+	\item \auxil{listaAnchos(im: Imagen) : \ent}{ 
+	 [|im[i]| \ | \ i \leftarrow [0..|im|)]
+	}
+	
+
+	\item \auxil{pixelV\acute{a}lido(p : Pixel) : Bool}{
+	\\ (prm(p) \geq 0) \ \land \ (prm(p) < 256) \ \land \ (sgd(p) \geq 0) \ \land \ (sgd(p) < 256) \ \land \ (ter(p) \geq 0) \ \land \ (ter(p) < 256)}
+
+	\item \auxil{imagenV\acute{a}lida(im:Imagen) : Bool}{ ancho(im) > 0 \ \land \ alto(im) > 0 \ \land \\ todosIguales(listaAnchos(im)) \ \land \ todos([pixelV\acute{a}lido(p) \ | \ p \leftarrow concat(im)])}
+		
+	\item \auxil{mismoTama\tilde{n}o(a,b:Imagen) : Bool}{ 
+	ancho(a)==ancho(b) \ \land \ alto(a)==alto(b)}
+	
+	\item \auxil{kVecinosCompletos(k, x, y: \ent, im : Imagen) : Bool}{ 
+	 (x \geq k) \land
+    (y \geq k) \land \\
+    (x < ancho(im) - k) \land
+    (y < alto(im) - k)
+	}
+	%esta debería ser menor o igual que el ancho-k
+	
+	\item \auxil{subImagen(x0, x1, y0, y1 : \ent, im : Imagen) : Imagen}{
+	$ \\ $ [ 
+[ im[i][j]$ $
+|$ $j \leftarrow [x0...x1]
+]$ $ 
+|$ $i \leftarrow [y0...y1]
+]
+}
+	
+	\item \auxil{kVecinos(k, x, y: \ent, im: Imagen) : [Pixel]}{ 
+	\\
+	concat(subImagen(x-k, x+k, y-k, y+k, im))
+	}
+	
+	\item \auxil{promedio(ns: [\ent]) : \ent}{ 
+	if$ $ (|ns| == 0)$ $ then $ $ 0 $ $ else $ $ (sum(ns) \ div \ |ns|)
+	}
+	
+	\item \auxil{pixelPromedio(ps : [Pixel]) : Pixel}{ \\
+	(promedio(canalesRojos(ps)), \ promedio(canalesVerdes(ps)), \ promedio(canalesAzules(ps)))
+	}
+
+	\item \auxil{colorPromedioEnPosici\acute{o}n(im : Imagen, x, y, k: \ent) : Pixel}{ 
+	\\ 
+	if $ $ kVecinosCompletos(k, x, y, im)$ $ then $ $ pixelPromedio(kVecinos(k, x,y,im)) $ $ else $ $ pixelNegro
+	}
+		
+\item \auxil{menores(xs: [\ent], x: \ent) : \ent}{
+	|[y$ $|$ $y \leftarrow xs, y < x]|
+}
+
+\item \auxil{menoresIguales(xs: [\ent], x: \ent) : \ent}{
+	|[y$ $|$ $y \leftarrow xs, y \leq x]|
+}
+		
+\item \auxil{esMediana(xs:[\ent], x:\ent) : Bool}{ 
+	\\ menores(xs,x) < (|xs| \ div \ 2) \land menoresIguales(xs,x) \geq (|xs| \ div \ 2)
+}
+			%esMediana tenia | | en las funciones menores y era al pedo porque ambas son Int
+			
+\item \auxil{pixelEsMedianaLista(px: Pixel, listaPixeles: [Pixel]) : Bool}{ 
+\\ esMediana(canalesRojos(listaPixeles),prm(px)) \ \land \
+esMediana(canalesVerdes(listaPixeles),sgd(px)) \ \land \
+esMediana(canalesAzules(listaPixeles),ter(px))
+}
+
+	\item \auxil{pixelCumpleFiltroAcuarela(imgOriginal, imgFinal: Imagen, k, x, y : \ent) : Bool}{ 
+	\\
+	if $ $ kVecinosCompletos(k, x, y, imgOriginal)$ $ then \\ pixelEsMedianaLista(imgFinal[y][x], kVecinos(k, x, y, imgOriginal) ) $ $ else \\ imgFinal[y][x]==pixelNegro
+	}
+
+	\item \auxil{filtroAcuarela(imgOriginal, imgFinal: Imagen, k: \ent) : Bool}{ 
+	\\ todos([pixelCumpleFiltroAcuarela(imgOriginal, ImgFinal, k, x, y)  
+	\\ | \ y \leftarrow [0..alto(imgOriginal) ), x \leftarrow [0..ancho(imgOriginal) )])
+	}
+
+\item \auxil{imCortadas(im: Imagen, m, n : \ent) : [Imagen]}{
+	$ \\ $ [subImagen((i*ancho(im) \ div \ n), ((i+1)*ancho(im) \ div \ n) - 1, (j*alto(im) \ div \ m), \\ ((j+1)*alto(im) \ div \ m) - 1, im) | i \leftarrow [0..m) , j \leftarrow [0..n)]
+}
+
+\item \auxil{contieneSubImagen(grande, chica : Imagen) : Bool}{
+	\\ alguno([
+chica == subImagen(x0, \ x0 \ + \ ancho(chica) \ - \ 1, \ y0, \ y0 \ + \ ancho(chica)  -  1, \ grande) 
+	\\ |$ $x0 \leftarrow [0...ancho(grande) - ancho(chica)], 
+  y0 \leftarrow [0...alto(grande) - alto(chica)]	
+])
+}
+
+\item \auxil{huecoGrande(col : Pixel,$ $alto, ancho : \ent) : Imagen}{
+	[  [col \ | j \leftarrow [0..ancho)] ] \ | i \leftarrow [0..alto)] ]
+}
+
+\item \auxil{huecoPegar(im : Imagen, col : Pixel) : Imagen}{
+	huecoGrande(col, alto(im), ancho(im))
+}
+
+\item \auxil{imagenTieneHuecoPegar(destino, origen: Imagen, col: Pixel) : Bool}{
+	\\ contieneSubImagen(destino, huecoPegar(origen, col))
+}
+
+\item \auxil{enRango(a, inicio, fin : \ent) : Bool}{
+	inicio \leq a \land a \leq fin
+}
+
+\item \auxil{sonIgualesSalvoRectangulo(im1, im2 : Imagen, x0, x1, y0, y1 : \ent) : Bool}{
+	\\ todos([im1[y][x] == im2[y][x] \lor (enRango(y, y0, y1) \land enRango(x, x0, x1)) 
+	\\ | x \leftarrow [x0..x1], y \leftarrow [y0..y1]])
+}
+
+\item \auxil{aplicaPegar(grande1, grande2, chica1, chica2 : Imagen) : Bool}{
+	\\ mismoTama\tilde{n}o(grande1, grande2) \ \land \\ mismoTama\tilde{n}o(chica1, chica2)\ \land \\
+		alguno([ aplicaPegarEnPos(grande1, grande2, chica1, chica2, 
+		\\ x0, x0+ancho(chica1)-1, y0, y0+alto(chica1)-1)
+		\\ |$ $x0 \leftarrow [0...ancho(grande1) - ancho(chica1)], y0 \leftarrow [0...alto(grande1) - alto(chica1)]	
+		\\ ])
+}
+
+\item \auxil{aplicaPegarEnPos(g1, g2, c1, c2 : Imagen, x0, x1, y0, y1 : \ent) : Bool}{
+\\
+		c1 == subImagen(x0,  x1, y0 , y1, g1) \land \\
+		c2 == subImagen(x0, x1, y0, y1, g2) \land \\ sonIgualesSalvoRectangulo(g1, g2, x0, x1, y0, y1)
+}
+
+\item \auxil{listaColorEnImagen(img : Imagen, col : Pixel) : [(x,y)]}{
+$ \\ $[ (x,y) \ | \ y \leftarrow [0...alto(img)), x \leftarrow [0...ancho(img)), img[y][x]==col]
+}
+
+\item \auxil{recorte(esquinaSupIzq, esquinaInfDer : (\ent,\ent), img :Imagen) : Imagen}{
+\\
+subImagen(prm(esquinaSupIzq), \ prm(esquinaInfDer), \ sgd(esquinaSupIzq), \ sgd(esquinaInfDer),img)
+}
+
+\item \auxil{rect\acute{a}nguloM\acute{a}scara(img : Imagen, col : Pixel) : Imagen}{
+\\
+recorte(
+\\ listaColorEnImagen(img,col)[0],
+\\ listaColorEnImagen(img,col)[|listaColorEnImagen(img,col)|-1],
+\\ img)
+}
+
+\item \auxil{\acute{a}rea(img : Imagen) : \ent}{
+ancho(img)*alto(img)
+}
+
+\ifx 
+Para considerar la máscara como válida se debe cumplir:
+ 1. color de la máscara esté presente
+ 	- Esto se logra recorriendo toda la imagen desde la izquina superior izquierda hasta la ezquina inferior derecha agregando las posiciones donde el color es el seleccionado.
+ 2. área de la posible máscara debe ser igual a la cantidad de ocurrencias del color
+ 	- El área se calcula sobre el rectángulo formado mediante la diagonal que nos da el primer y último elemento de la lista de posiciones del color, ya que si este es un rectángulo válido, por la forma en que se recorre la imagen agregando las posiciones, si existiese alguna inconsistencia, el área devolverá 0
+ 3. La posible mascara debe ser enteramente del color indicado
+ 	- Finalmente, habiéndose cumplido las condiciones anteriores, pido que este rectángulo contenga todas las posiciones del color
+\fi
+
+\item \auxil{m\acute{a}scaraV\acute{a}lida(img : Imagen, col : Pixel) : Bool}{
+\\
+|listaColorEnImagen(img,col)|>0 \  \land \\
+|listaColorEnImagen(img,col)|==\acute{a}rea(rect\acute{a}nguloM\acute{a}scara(img,col)) \ \land \\ rect\acute{a}nguloM\acute{a}scara(img,col) == huecoPegar(rect\acute{a}nguloM\acute{a}scara(img,col), \ col) 
+}
+\end{itemize}
+        
+\end{document}
