@@ -102,9 +102,10 @@
 	Especificación Pegar:
 	
 	\begin{problema*}{Pegar}{destino : Imagen, col : Pixel, origen: Imagen}
+        \modifica {destino}
         \requiere {pixelV\acute{a}lido(col)}
-		\modifica {destino}
-		\requiere {imagen\acute{a}lida(origen) \land imagen\acute{a}lida(pre(destino))}
+		\requiere {imagenV\acute{a}lida(origen) \land imagenV\acute{a}lida(pre(destino))}
+		\requiere {m\acute{a}scaraV\acute{a}lida(pre(destino), col)}
 		\asegura {  \lnot imagenTieneHuecoPegar(pre(destino), origen, col) \Then $ \newline $ destino  == pre(destino)}
   	  	\asegura {imagenTieneHuecoPegar(pre(destino), origen, col) \Then $ \newline $ aplicaPegar(pre(destino), destino, huecoPegar(origen, col), origen)}
 	\end{problema*}
@@ -279,7 +280,42 @@ chica == subImagen(x0, \ x0 \ + \ ancho(chica) \ - \ 1, \ y0, \ y0 \ + \ ancho(c
 		c2 == subImagen(x0, x1, y0, y1, g2) \land \\ sonIgualesSalvoRectangulo(g1, g2, x0, x1, y0, y1)
 }
 
+\item \auxil{listaColorEnImagen(img : Imagen, col : Pixel) : [(x,y)]}{
+$ \\ $[ (x,y) \ | \ y \leftarrow [0...alto(img)), x \leftarrow [0...ancho(img)), img[y][x]==col]
+}
 
+\item \auxil{recorte(esquinaSupIzq, esquinaInfDer : (\ent,\ent), img :Imagen) : Imagen}{
+\\
+subImagen(prm(esquinaSupIzq), \ prm(esquinaInfDer), \ sgd(esquinaSupIzq), \ sgd(esquinaInfDer),img)
+}
+
+\item \auxil{rect\acute{a}nguloM\acute{a}scara(img : Imagen, col : Pixel) : Imagen}{
+\\
+recorte(
+\\ listaColorEnImagen(img,col)[0],
+\\ listaColorEnImagen(img,col)[|listaColorEnImagen(img,col)|-1],
+\\ img)
+}
+
+\item \auxil{\acute{a}rea(img : Imagen) : \ent}{
+ancho(img)*alto(img)
+}
+
+\ifx 
+Para considerar la máscara como válida se debe cumplir:
+ 1. color de la máscara esté presente
+ 	- Esto se logra recorriendo toda la imagen desde la izquina superior izquierda hasta la ezquina inferior derecha agregando las posiciones donde el color es el seleccionado.
+ 2. área de la posible máscara debe ser igual a la cantidad de ocurrencias del color
+ 	- El área se calcula sobre el rectángulo formado mediante la diagonal que nos da el primer y último elemento de la lista de posiciones del color, ya que si este es un rectángulo válido, por la forma en que se recorre la imagen agregando las posiciones, si existiese alguna inconsistencia, el área devolverá 0
+ 3. La posible mascara debe ser enteramente del color indicado
+ 	- Finalmente, habiéndose cumplido las condiciones anteriores, pido que este rectángulo contenga todas las posiciones del color
+\fi
+
+\item \auxil{m\acute{a}scaraV\acute{a}lida(img : Imagen, col : Pixel) : Bool}{
+\\
+|listaColorEnImagen(img,col)|>0 \  \land \\
+|listaColorEnImagen(img,col)|==\acute{a}rea(rect\acute{a}nguloM\acute{a}scara(img,col)) \ \land \\ rect\acute{a}nguloM\acute{a}scara(img,col) == huecoPegar(rect\acute{a}nguloM\acute{a}scara(img,col), \ col) 
+}
 \end{itemize}
         
 \end{document}
