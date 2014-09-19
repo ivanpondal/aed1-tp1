@@ -316,6 +316,22 @@ Para considerar la máscara como válida se debe cumplir:
 |listaColorEnImagen(img,col)|>0 \  \land \\
 |listaColorEnImagen(img,col)|==\acute{a}rea(rect\acute{a}nguloM\acute{a}scara(img,col)) \ \land \\ rect\acute{a}nguloM\acute{a}scara(img,col) == huecoPegar(rect\acute{a}nguloM\acute{a}scara(img,col), \ col) 
 }
+\item \auxil{imagenPasoTransici\acute{o}n(inicial, final : Imagen, n, i : \ent) : Imagen}{
+$ \\ $
+	[ [pixelPasoTransici\acute{o}n(inicial[y][x], final[y][x], n, i) $ \\ $ | j \leftarrow [0..ancho(inicial)-1] ] 
+	\ | i \leftarrow [0..alto(inicial)-1] ] 
+}
+
+\item \auxil{pixelPasoTransici\acute{o}n(p, q : Pixel, n, i : \ent) : Pixel}{ $ \\ $
+	[canalPasoTransici\acute{0}n(prm(p), prm(q), n, i),\\
+	canalPasoTransici\acute{0}n(sgd(p), sgd(q), n, i), \\
+	canalPasoTransici\acute{0}n(ter(p), ter(q), n, i)]
+}
+
+\item \auxil{canalPasoTransici\acute{o}n(a, b, n, i : \ent) : \ent}{
+a + i * \frac{b-a}{n-1}
+}
+
 \end{itemize}
         
 \end{document}
