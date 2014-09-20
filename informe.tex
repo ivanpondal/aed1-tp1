@@ -101,7 +101,7 @@
 \begin{ejercicio}
 	Especificación Pegar:
 	
-	\begin{problema*}{Pegar}{destino : Imagen, col : Pixel, origen: Imagen}
+	\begin{problema*}{Pegar}{origen,destino : Imagen, col : Pixel}
         \modifica {destino}
         \requiere {pixelV\acute{a}lido(col)}
 		\requiere {imagenV\acute{a}lida(origen) \land imagenV\acute{a}lida(pre(destino))}
@@ -113,6 +113,20 @@
 \end{ejercicio}
 
 \newpage
+
+\begin{ejercicio}
+	Especificación Transición:
+	
+	\begin{problema}{Transición}{inicial,final : Imagen, n : \ent}{secuencia: [Imagen]}
+        \requiere {n>1}
+        \requiere {imagenV\acute{a}lida(inicial) \land imagenV\acute{a}lida(final)}
+        \requiere{mismoTama\tilde{n}o(inicial, \ final)}
+        \asegura{|secuencia|==n}
+        \asegura{todos[imagenEnTransici\acute{o}n(inicial,final,n,i)==secuencia[i] \ | \ i \leftarrow [0..n)]}
+	\end{problema}
+
+\end{ejercicio}
+
 
 \subsection{Auxiliares}
 
@@ -316,20 +330,20 @@ Para considerar la máscara como válida se debe cumplir:
 |listaColorEnImagen(img,col)|>0 \  \land \\
 |listaColorEnImagen(img,col)|==\acute{a}rea(rect\acute{a}nguloM\acute{a}scara(img,col)) \ \land \\ rect\acute{a}nguloM\acute{a}scara(img,col) == huecoPegar(rect\acute{a}nguloM\acute{a}scara(img,col), \ col) 
 }
-\item \auxil{imagenPasoTransici\acute{o}n(inicial, final : Imagen, n, i : \ent) : Imagen}{
+\item \auxil{imagenEnTransici\acute{o}n(inicial, final : Imagen, n, i : \ent) : Imagen}{
 $ \\ $
-	[ [pixelPasoTransici\acute{o}n(inicial[y][x], final[y][x], n, i) $ \\ $ | j \leftarrow [0..ancho(inicial)-1] ] 
-	\ | i \leftarrow [0..alto(inicial)-1] ] 
+	[ [pixelEnTransici\acute{o}n(inicial[y][x], final[y][x], n, i) $ \\ $ | \ x \leftarrow [0..ancho(inicial)) \ ] 
+	\ | \ y \leftarrow [0..alto(inicial)) \ ] 
 }
 
-\item \auxil{pixelPasoTransici\acute{o}n(p, q : Pixel, n, i : \ent) : Pixel}{ $ \\ $
-	[canalPasoTransici\acute{0}n(prm(p), prm(q), n, i),\\
-	canalPasoTransici\acute{0}n(sgd(p), sgd(q), n, i), \\
-	canalPasoTransici\acute{0}n(ter(p), ter(q), n, i)]
+\item \auxil{pixelEnTransici\acute{o}n(a, b : Pixel, n, i : \ent) : Pixel}{ $ \\ $
+	[canalEnTransici\acute{o}n(prm(a), prm(b), n, i),\\
+	canalEnTransici\acute{o}n(sgd(a), sgd(b), n, i), \\
+	canalEnTransici\acute{o}n(ter(a), ter(b), n, i)]
 }
 
-\item \auxil{canalPasoTransici\acute{o}n(a, b, n, i : \ent) : \ent}{
-a + i * \frac{b-a}{n-1}
+\item \auxil{canalEnTransici\acute{o}n(a, b, n, i : \ent) : \ent}{
+a + i * (b-a) \ div \ (n-1)
 }
 
 \end{itemize}
