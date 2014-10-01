@@ -122,7 +122,7 @@
         \requiere {imagenV\acute{a}lida(inicial) \land imagenV\acute{a}lida(final)}
         \requiere{mismoTama\tilde{n}o(inicial, \ final)}
         \asegura{|secuencia|==n}
-        \asegura{todos[imagenEnTransici\acute{o}n(inicial,final,n,i)==secuencia[i] \ | \ i \leftarrow [0..n)]}
+        \asegura{ (\forall i \in [0...n)) secuencia[i] == imagenEnTransici\acute{o}n(inicial,final,n,i)}
 	\end{problema}
 
 \end{ejercicio}
@@ -330,6 +330,7 @@ Para considerar la máscara como válida se debe cumplir:
 |listaColorEnImagen(img,col)|>0 \  \land \\
 |listaColorEnImagen(img,col)|==\acute{a}rea(rect\acute{a}nguloM\acute{a}scara(img,col)) \ \land \\ rect\acute{a}nguloM\acute{a}scara(img,col) == huecoPegar(rect\acute{a}nguloM\acute{a}scara(img,col), \ col) 
 }
+
 \item \auxil{imagenEnTransici\acute{o}n(inicial, final : Imagen, n, i : \ent) : Imagen}{
 $ \\ $
 	[ [pixelEnTransici\acute{o}n(inicial[y][x], final[y][x], n, i) $ \\ $ | \ x \leftarrow [0..ancho(inicial)) \ ] 
