@@ -280,18 +280,18 @@ chica == subImagen(x0, \ x0 \ + \ ancho(chica) \ - \ 1, \ y0, \ y0 \ + \ ancho(c
 	\\ | x \leftarrow [x0..x1], y \leftarrow [y0..y1]])
 }
 
+\item \auxil{aplicaPegarEnPos(g1, g2, c1, c2 : Imagen, x0, x1, y0, y1 : \ent) : Bool}{
+\\
+		c1 == subImagen(x0,  x1, y0 , y1, g1) \land \\
+		c2 == subImagen(x0, x1, y0, y1, g2) \land \\ sonIgualesSalvoRectangulo(g1, g2, x0, x1, y0, y1)
+}
+
 \item \auxil{aplicaPegar(grande1, grande2, chica1, chica2 : Imagen) : Bool}{
 	\\ mismoTama\tilde{n}o(grande1, grande2) \ \land \\ mismoTama\tilde{n}o(chica1, chica2)\ \land \\
 		alguno([ aplicaPegarEnPos(grande1, grande2, chica1, chica2, 
 		\\ x0, x0+ancho(chica1)-1, y0, y0+alto(chica1)-1)
 		\\ |$ $x0 \leftarrow [0...ancho(grande1) - ancho(chica1)], y0 \leftarrow [0...alto(grande1) - alto(chica1)]	
 		\\ ])
-}
-
-\item \auxil{aplicaPegarEnPos(g1, g2, c1, c2 : Imagen, x0, x1, y0, y1 : \ent) : Bool}{
-\\
-		c1 == subImagen(x0,  x1, y0 , y1, g1) \land \\
-		c2 == subImagen(x0, x1, y0, y1, g2) \land \\ sonIgualesSalvoRectangulo(g1, g2, x0, x1, y0, y1)
 }
 
 \item \auxil{listaColorEnImagen(img : Imagen, col : Pixel) : [(x,y)]}{
@@ -331,10 +331,9 @@ Para considerar la máscara como válida se debe cumplir:
 |listaColorEnImagen(img,col)|==\acute{a}rea(rect\acute{a}nguloM\acute{a}scara(img,col)) \ \land \\ rect\acute{a}nguloM\acute{a}scara(img,col) == huecoPegar(rect\acute{a}nguloM\acute{a}scara(img,col), \ col) 
 }
 
-\item \auxil{imagenEnTransici\acute{o}n(inicial, final : Imagen, n, i : \ent) : Imagen}{
-$ \\ $
-	[ [pixelEnTransici\acute{o}n(inicial[y][x], final[y][x], n, i) $ \\ $ | \ x \leftarrow [0..ancho(inicial)) \ ] 
-	\ | \ y \leftarrow [0..alto(inicial)) \ ] 
+
+\item \auxil{canalEnTransici\acute{o}n(a, b, n, i : \ent) : \ent}{
+a + (i * (b-a)) \ div \ (n-1)
 }
 
 \item \auxil{pixelEnTransici\acute{o}n(a, b : Pixel, n, i : \ent) : Pixel}{ $ \\ $
@@ -345,8 +344,10 @@ $ \\ $
 	)
 }
 
-\item \auxil{canalEnTransici\acute{o}n(a, b, n, i : \ent) : \ent}{
-a + (i * (b-a)) \ div \ (n-1)
+\item \auxil{imagenEnTransici\acute{o}n(inicial, final : Imagen, n, i : \ent) : Imagen}{
+$ \\ $
+	[ [pixelEnTransici\acute{o}n(inicial[y][x], final[y][x], n, i) $ \\ $ | \ x \leftarrow [0..ancho(inicial)) \ ] 
+	\ | \ y \leftarrow [0..alto(inicial)) \ ] 
 }
 
 \end{itemize}
